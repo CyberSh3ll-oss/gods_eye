@@ -17,10 +17,12 @@ def clear_screen():
     os.system('clear' if os.name == 'posix' else 'cls')
 
 def header():
-    print(f"{CYAN}{BOLD}" + "👁️  " + "="*56 + "  👁️")
-    print(f"        ⚡ G O D ' S   E Y E  :  O S I N T   S U I T E ⚡")
+    print(f"{RED}{BOLD}")
+    print("      👁️  👁️  👁️   G O D ' S   E Y E   👁️  👁️  👁️")
+    print(f"{CYAN}  " + "="*56)
+    print(f"        ⚡  O S I N T   S U I T E   ⚡")
     print(f"               Developed by: {YELLOW}Osint_by_vaishnav{CYAN}")
-    print(f" " + "="*60 + f"{RESET}\n")
+    print(f"  " + "="*56 + f"{RESET}\n")
 
 def display_tool_info(name, desc, usage_examples):
     clear_screen()
