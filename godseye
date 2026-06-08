@@ -13,7 +13,7 @@ show_header() {
     clear
     echo -e "${CYAN}👁️  ========================================================  👁️"
     echo -e "        ⚡ G O D ' S   E Y E  :  O S I N T   S U I T E ⚡"
-    echo -e "               Developed by: Osint_by_vaishnav"
+    echo -e "               Developed by: VAISHNAV"
     echo -e " ============================================================${RESET}\n"
 }
 
