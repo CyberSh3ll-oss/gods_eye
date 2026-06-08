@@ -142,35 +142,6 @@ install_pkg "aircrack-ng"   "aircrack-ng"
 install_pkg "wifite"        "wifite"
 echo ""
 
-# ── Social Engineering ───────────────────────────────────────
-echo -e "${CYAN}${BOLD}  ── SOCIAL ENGINEERING ──────────────────────────────${RESET}"
-# Zphisher is a git repo, not an apt package
-ZPHISHER_DIR="/opt/zphisher"
-if [ -d "$ZPHISHER_DIR" ]; then
-    echo -e "  ${CYAN}[~]${RESET} zphisher — already installed at ${ZPHISHER_DIR}."
-    ((SKIPPED++))
-else
-    echo -e "  ${YELLOW}[*]${RESET} Installing ${BOLD}zphisher${RESET} from GitHub..."
-    if command -v git &>/dev/null; then
-        if git clone https://github.com/htr-tech/zphisher.git "$ZPHISHER_DIR" &>/dev/null 2>&1; then
-            chmod +x "$ZPHISHER_DIR/zphisher.sh"
-            echo -e "  ${GREEN}[✓]${RESET} zphisher — cloned to ${ZPHISHER_DIR}."
-            ((INSTALLED++))
-        else
-            echo -e "  ${RED}[✗]${RESET} zphisher — clone failed. Check your internet connection."
-            ((FAILED++))
-            FAILED_LIST+=("zphisher (git clone)")
-        fi
-    else
-        install_pkg "git" "git"
-        git clone https://github.com/htr-tech/zphisher.git "$ZPHISHER_DIR" &>/dev/null 2>&1
-        chmod +x "$ZPHISHER_DIR/zphisher.sh" 2>/dev/null
-        echo -e "  ${GREEN}[✓]${RESET} zphisher — cloned to ${ZPHISHER_DIR}."
-        ((INSTALLED++))
-    fi
-fi
-echo ""
-
 # ── Make godseye.py executable ───────────────────────────────
 echo -e "${CYAN}${BOLD}  ── FINALISING ──────────────────────────────────────${RESET}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
