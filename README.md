@@ -4,7 +4,7 @@
         *  *  *   G O D ' S   E Y E   *  *  *
   ========================================================
               OSINT SUITE
-               Developed by: VAISHNAV
+         Developed by: VAISHNAV
   ========================================================
 ```
 
@@ -254,9 +254,8 @@ gods_eye/
 
 | Role | Name | Specialisation |
 |------|------|---------------|
-| Lead Architect | Vaishnav Rajeev | OSINT, digital forensics, network analysis, scripting & automation |
+| Architect | Vaishnav Rajeev | OSINT, digital forensics, network analysis, scripting & automation |
 | Core Contributor | Rishabh Gurnani | Governance, risk & compliance (GRC), identity & MFA |
-| Technical Documentation | Suraj Varma | Senior Technical Author, Forthright Global |
 
 **Contact:** vaishnav.cvv240888@cvv.ac.in
 
