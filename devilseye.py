@@ -15,6 +15,7 @@ import subprocess
 import threading
 import socket
 import time
+import shlex
 
 # ANSI colours
 BLUE = "\033[1;34m"
@@ -41,6 +42,21 @@ TOOL_MAP = {
     "wpscan": ("wpscan", "wpscan"),
     "aircrack-ng": ("aircrack-ng", "aircrack-ng"),
     "wifite": ("wifite", "wifite"),
+}
+
+TOOL_HELP_COMMANDS = {
+    "amass": "amass -h",
+    "nmap": "nmap -h",
+    "theHarvester": "theHarvester -h",
+    "dnsenum": "dnsenum --help",
+    "dnsrecon": "dnsrecon -h",
+    "dirb": "dirb",
+    "gobuster": "gobuster help",
+    "ffuf": "ffuf -h",
+    "wapiti": "wapiti -h",
+    "wpscan": "wpscan --help",
+    "aircrack-ng": "aircrack-ng --help",
+    "wifite": "wifite --help",
 }
 
 
@@ -154,7 +170,7 @@ def install_tool_interactive(apt_package: str):
 def launch_tool(display_name: str):
     """
     Look up a Kali tool by display name, check if installed,
-    optionally install it, then run its normal Kali command.
+    optionally install it, then open a terminal with its help command ready.
     """
     if display_name not in TOOL_MAP:
         print(f"{RED}  [!] Unknown tool: {display_name}{RESET}")
@@ -182,17 +198,22 @@ def launch_tool(display_name: str):
         pause()
         return
 
+    start_cmd = TOOL_HELP_COMMANDS.get(display_name, f"{binary} -h")
     script_path = f"/tmp/godseye_{display_name.replace(' ', '_').replace('/', '_')}.sh"
     with open(script_path, "w") as f:
         f.write(
             "#!/bin/bash\n"
             "clear\n"
             f"echo '  [*] {display_name} interactive session'\n"
-            f"echo '  [*] Running Kali command: {binary}'\n"
+            f"echo '  [*] Command is ready below. Press ENTER to run it, or edit it first.'\n"
             "echo ''\n"
-            f"{binary}\n"
+            f"DEFAULT_CMD={shlex.quote(start_cmd)}\n"
+            "read -e -i \"$DEFAULT_CMD\" -p '  godseye> ' USER_CMD\n"
+            "if [ -n \"$USER_CMD\" ]; then\n"
+            "    bash -lc \"$USER_CMD\"\n"
+            "fi\n"
             "echo ''\n"
-            f"echo '[*] {binary} exited. You can run it again from this shell.'\n"
+            "echo '[*] Command finished. You can continue using this shell.'\n"
             "exec bash\n"
         )
     os.chmod(script_path, 0o755)
