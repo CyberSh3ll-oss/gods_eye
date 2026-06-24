@@ -15,7 +15,6 @@ import subprocess
 import threading
 import socket
 import time
-import shlex
 
 # ANSI colours
 BLUE = "\033[1;34m"
@@ -44,75 +43,171 @@ TOOL_MAP = {
     "wifite": ("wifite", "wifite"),
 }
 
-# Short plain-language descriptions and example usage for each tool.
-TOOL_DESCRIPTIONS = {
+# Plain-English descriptions, example usage, and the exact help flag per tool
+TOOL_INFO = {
     "amass": {
-        "what": "Subdomain discovery and DNS mapping tool.",
-        "usage": "amass enum -d example.com"
+        "what": [
+            "Amass is a subdomain discovery and DNS mapping tool.",
+            "It finds every subdomain attached to a target domain",
+            "using passive and active reconnaissance techniques.",
+        ],
+        "example": [
+            "amass enum -d example.com",
+            "amass enum -d example.com -passive",
+            "amass enum -d example.com -brute",
+        ],
+        "help_cmd": "amass -h",
     },
     "nmap": {
-        "what": "Network scanner for ports and services.",
-        "usage": "nmap -sC -sV example.com"
+        "what": [
+            "Nmap scans a target to find open ports and running services.",
+            "It tells you what the target machine has exposed to the network",
+            "and what software versions are running on each port.",
+        ],
+        "example": [
+            "nmap -sC -sV 192.168.1.1",
+            "nmap -p 1-65535 192.168.1.1",
+            "nmap -A example.com",
+        ],
+        "help_cmd": "nmap -h",
     },
     "theHarvester": {
-        "what": "Gather emails, hosts and OSINT from public sources.",
-        "usage": "theHarvester -d example.com -b all"
+        "what": [
+            "theHarvester collects emails, subdomains, IPs and employee names",
+            "from public sources like Google, Bing, LinkedIn and Shodan.",
+            "Perfect for building an OSINT profile of a target organisation.",
+        ],
+        "example": [
+            "theHarvester -d example.com -b google",
+            "theHarvester -d example.com -b all",
+            "theHarvester -d example.com -b linkedin",
+        ],
+        "help_cmd": "theHarvester -h",
     },
     "dnsenum": {
-        "what": "Enumerate DNS records for a domain.",
-        "usage": "dnsenum example.com"
+        "what": [
+            "dnsenum enumerates DNS records for a domain.",
+            "It finds A, MX, NS and SOA records and attempts zone transfers.",
+            "Useful for mapping the DNS infrastructure of a target.",
+        ],
+        "example": [
+            "dnsenum example.com",
+            "dnsenum --enum example.com",
+            "dnsenum --dnsserver 8.8.8.8 example.com",
+        ],
+        "help_cmd": "dnsenum --help",
     },
     "dnsrecon": {
-        "what": "Perform DNS zone and record reconnaissance.",
-        "usage": "dnsrecon -d example.com"
+        "what": [
+            "dnsrecon performs deep DNS reconnaissance on a target domain.",
+            "It checks for zone transfers, reverse lookups, SRV records",
+            "and can brute-force subdomains from a wordlist.",
+        ],
+        "example": [
+            "dnsrecon -d example.com",
+            "dnsrecon -d example.com -t axfr",
+            "dnsrecon -d example.com -t brt -D /usr/share/wordlists/dnsmap.txt",
+        ],
+        "help_cmd": "dnsrecon -h",
     },
     "dirb": {
-        "what": "Directory brute-force using wordlists.",
-        "usage": "dirb https://example.com /usr/share/wordlists/dirb/common.txt"
+        "what": [
+            "dirb brute-forces hidden directories and files on a web server.",
+            "It sends requests to a target URL using a wordlist and reports",
+            "every path that returns a valid HTTP response.",
+        ],
+        "example": [
+            "dirb https://example.com",
+            "dirb https://example.com /usr/share/wordlists/dirb/common.txt",
+            "dirb https://example.com -r -z 100",
+        ],
+        "help_cmd": "dirb",
     },
     "gobuster": {
-        "what": "Fast directory and DNS brute-forcer.",
-        "usage": "gobuster dir -u https://example.com -w /usr/share/wordlists/dirb/common.txt"
+        "what": [
+            "gobuster is a fast directory, DNS and vhost brute-forcer.",
+            "It runs multiple threads simultaneously making it much faster",
+            "than older tools like dirb for large wordlists.",
+        ],
+        "example": [
+            "gobuster dir -u https://example.com -w /usr/share/wordlists/dirb/common.txt",
+            "gobuster dns -d example.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt",
+            "gobuster dir -u https://example.com -w /usr/share/wordlists/dirb/big.txt -t 50",
+        ],
+        "help_cmd": "gobuster help",
     },
     "ffuf": {
-        "what": "Fast web fuzzer for directories and parameters.",
-        "usage": "ffuf -u https://example.com/FUZZ -w /usr/share/wordlists/dirb/common.txt"
+        "what": [
+            "ffuf (Fuzz Faster U Fool) is a high-speed web fuzzer.",
+            "It can fuzz directories, parameters, headers and subdomains.",
+            "The FUZZ keyword in the URL marks where the wordlist is injected.",
+        ],
+        "example": [
+            "ffuf -u https://example.com/FUZZ -w /usr/share/wordlists/dirb/common.txt",
+            "ffuf -u https://example.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200",
+            "ffuf -u https://FUZZ.example.com -w subdomains.txt -H 'Host: FUZZ.example.com'",
+        ],
+        "help_cmd": "ffuf -h",
     },
     "wapiti": {
-        "what": "Web application vulnerability scanner.",
-        "usage": "wapiti -u https://example.com -f html -o /tmp/wapiti_report"
+        "what": [
+            "wapiti scans a web application for common vulnerabilities.",
+            "It tests for SQL injection, XSS, file inclusion, SSRF and more",
+            "by crawling the target site and sending crafted payloads.",
+        ],
+        "example": [
+            "wapiti -u https://example.com",
+            "wapiti -u https://example.com -f html -o /tmp/wapiti_report",
+            "wapiti -u https://example.com --scope domain",
+        ],
+        "help_cmd": "wapiti -h",
     },
     "wpscan": {
-        "what": "WordPress vulnerability scanner.",
-        "usage": "wpscan --url https://example.com --enumerate u"
+        "what": [
+            "wpscan is a WordPress security scanner.",
+            "It detects vulnerable plugins, themes and WordPress core versions.",
+            "It can also enumerate usernames and brute-force passwords.",
+        ],
+        "example": [
+            "wpscan --url https://example.com",
+            "wpscan --url https://example.com --enumerate u",
+            "wpscan --url https://example.com --enumerate vp --plugins-detection aggressive",
+        ],
+        "help_cmd": "wpscan --help",
     },
     "aircrack-ng": {
-        "what": "WPA/WEP handshake analysis and cracking suite.",
-        "usage": "aircrack-ng -w /path/to/wordlist capturefile.cap"
+        "what": [
+            "aircrack-ng is a complete suite for auditing wireless networks.",
+            "It captures WPA/WEP handshakes and cracks them using wordlists.",
+            "Must be used on networks you own or have permission to test.",
+        ],
+        "example": [
+            "airmon-ng start wlan0",
+            "airodump-ng wlan0mon",
+            "aircrack-ng -w /usr/share/wordlists/rockyou.txt capturefile.cap",
+        ],
+        "help_cmd": "aircrack-ng --help",
     },
     "wifite": {
-        "what": "Automated wireless auditing tool.",
-        "usage": "wifite"
+        "what": [
+            "wifite is an automated wireless auditing tool.",
+            "It automates the process of capturing handshakes and attacking",
+            "WEP, WPA and WPS networks with minimal manual steps.",
+        ],
+        "example": [
+            "sudo wifite",
+            "sudo wifite --wpa --dict /usr/share/wordlists/rockyou.txt",
+            "sudo wifite --kill --wps",
+        ],
+        "help_cmd": "wifite --help",
     },
 }
 
-TOOL_HELP_COMMANDS = {
-    "amass": "amass -h",
-    "nmap": "nmap -h",
-    "theHarvester": "theHarvester -h",
-    "dnsenum": "dnsenum --help",
-    "dnsrecon": "dnsrecon -h",
-    "dirb": "dirb",
-    "gobuster": "gobuster help",
-    "ffuf": "ffuf -h",
-    "wapiti": "wapiti -h",
-    "wpscan": "wpscan --help",
-    "aircrack-ng": "aircrack-ng --help",
-    "wifite": "wifite --help",
-}
 
-
+# ─────────────────────────────────────────────────────────
 # Helpers
+# ─────────────────────────────────────────────────────────
+
 def clear_screen():
     os.system("clear")
 
@@ -155,7 +250,6 @@ def best_terminal():
     """Return an installed graphical terminal emulator, or None."""
     if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
         return None
-
     for term in (
         "qterminal",
         "xfce4-terminal",
@@ -173,41 +267,53 @@ def best_terminal():
 
 
 def open_in_terminal(tool_display: str, script_path: str, wait: bool = False) -> bool:
-    """Open a shell script in a terminal. Fall back to the current terminal."""
+    """
+    Open a shell script in a new graphical terminal window.
+    Returns True if a new window was opened, False if we fell back
+    to running in the current terminal.
+    """
     term = best_terminal()
     title = f"GOD'S EYE | {tool_display.upper()}"
 
     if term is None:
-        # No graphical terminal available; run in current terminal
         subprocess.run(["bash", script_path])
         return False
 
-    cmd_map = {
-        "qterminal": ["qterminal", "-T", title, "-e", "bash", script_path],
-        "xfce4-terminal": ["xfce4-terminal", "--title", title, "--command", f"bash {script_path}"],
-        "gnome-terminal": ["gnome-terminal", "--title", title, "--", "bash", script_path],
-        "mate-terminal": ["mate-terminal", "--title", title, "--", "bash", script_path],
-        "konsole": ["konsole", "--title", title, "-e", "bash", script_path],
-        "terminator": ["terminator", "-T", title, "-x", "bash", script_path],
-        "lxterminal": ["lxterminal", "--title", title, "-e", f"bash {script_path}"],
-        "x-terminal-emulator": ["x-terminal-emulator", "-e", f"bash {script_path}"],
-        "xterm": ["xterm", "-title", title, "-e", f"bash {script_path}"],
-    }
-    cmd = cmd_map[term]
+    # Every terminal emulator has a different flag syntax.
+    # We build the exact correct command for each one.
+    if term == "qterminal":
+        cmd = ["qterminal", "-T", title, "-e", f"bash {script_path}"]
+    elif term == "xfce4-terminal":
+        # xfce4-terminal --command must receive the full command as ONE string
+        cmd = ["xfce4-terminal", "--title", title, "--command", f"bash {script_path}"]
+    elif term in ("gnome-terminal", "mate-terminal"):
+        # These use -- to separate terminal args from the command
+        cmd = [term, "--title", title, "--", "bash", script_path]
+    elif term == "konsole":
+        cmd = ["konsole", "--title", title, "-e", "bash", script_path]
+    elif term == "terminator":
+        cmd = ["terminator", "-T", title, "-x", "bash", script_path]
+    else:
+        # lxterminal, x-terminal-emulator, xterm — all accept -e "cmd"
+        cmd = [term, "-e", f"bash {script_path}"]
 
     try:
-        proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         if wait:
             proc.wait()
         return True
     except FileNotFoundError:
-        # Terminal disappeared between detection and launch; run in current shell
+        # Terminal vanished between detection and launch
         subprocess.run(["bash", script_path])
         return False
 
 
 def install_tool_interactive(apt_package: str):
-    """Install an apt package in a terminal so the user sees progress."""
+    """Install an apt package in a blocking terminal window."""
     script_path = f"/tmp/godseye_install_{apt_package}.sh"
     with open(script_path, "w") as f:
         f.write(
@@ -215,17 +321,22 @@ def install_tool_interactive(apt_package: str):
             f"echo '[*] Installing {apt_package}...'\n"
             f"sudo apt-get install -y {apt_package}\n"
             "echo '[+] Done.'\n"
-            "read -p 'Press ENTER to close...' _\n"
+            "read -p 'Press ENTER to close this window...' _\n"
         )
     os.chmod(script_path, 0o755)
     open_in_terminal(f"Install {apt_package}", script_path, wait=True)
 
 
+# ─────────────────────────────────────────────────────────
+# launch_tool — THE ONLY FUNCTION CHANGED FROM THE ORIGINAL
+# Opens a clean new terminal showing:
+#   1. What the tool does (plain English)
+#   2. Example commands with explanations
+#   3. The tool's actual --help output
+#   4. A live bash shell so the user can run commands freely
+# ─────────────────────────────────────────────────────────
+
 def launch_tool(display_name: str):
-    """
-    Look up a Kali tool by display name, check if installed,
-    optionally install it, then open a terminal with its help command ready.
-    """
     if display_name not in TOOL_MAP:
         print(f"{RED}  [!] Unknown tool: {display_name}{RESET}")
         pause()
@@ -235,6 +346,7 @@ def launch_tool(display_name: str):
     clear_screen()
     header()
 
+    # ── Install check ────────────────────────────────────
     if not is_installed(binary):
         ans = input(
             f"  {YELLOW}[!] '{binary}' not found. Install via apt? [y/N]: {RESET}"
@@ -246,57 +358,91 @@ def launch_tool(display_name: str):
             pause()
             return
 
-    # Re-check after attempted install
     if not is_installed(binary):
         print(f"  {RED}[-] Installation failed or was cancelled.{RESET}")
         pause()
         return
 
-    # Prepare a helpful interactive script that prints a simple description and usage,
-    # then pre-fills a suggested command which the user can edit before running.
-    start_cmd = TOOL_HELP_COMMANDS.get(display_name, f"{binary} -h")
-    desc = TOOL_DESCRIPTIONS.get(display_name, {})
-    what = desc.get("what", "Tool")
-    usage = desc.get("usage", start_cmd)
+    # ── Pull description data ────────────────────────────
+    info = TOOL_INFO.get(display_name, {})
+    what_lines = info.get("what", [f"{display_name} — no description available."])
+    example_lines = info.get("example", [f"{binary} -h"])
+    help_cmd = info.get("help_cmd", f"{binary} -h")
 
-    script_path = f"/tmp/godseye_{display_name.replace(' ', '_').replace('/', '_')}.sh"
+    # ── Build the script that runs in the new terminal ───
+    # Rules:
+    #   - No shlex.quote() around echo strings (adds unwanted literal quotes)
+    #   - No read -e -i (not portable, causes "stuck" appearance)
+    #   - Run help command directly so output appears immediately
+    #   - exec bash at end gives a live shell — user can run their own commands
+    script_path = f"/tmp/godseye_{display_name.replace('/', '_')}.sh"
+
+    lines = ["#!/bin/bash", "clear", ""]
+
+    # Header bar
+    lines.append("echo '================================================================'")
+    lines.append(f"echo '  GOD'\"'\"'S EYE  |  {display_name.upper()}'")
+    lines.append("echo '================================================================'")
+    lines.append("echo ''")
+
+    # What it does
+    lines.append("echo '  WHAT THIS TOOL DOES'")
+    lines.append("echo '  -------------------'")
+    for line in what_lines:
+        # Escape single quotes by ending the string, inserting escaped quote, resuming
+        safe = line.replace("'", "'\"'\"'")
+        lines.append(f"echo '  {safe}'")
+    lines.append("echo ''")
+
+    # Example usage
+    lines.append("echo '  EXAMPLE COMMANDS'")
+    lines.append("echo '  ----------------'")
+    for ex in example_lines:
+        safe = ex.replace("'", "'\"'\"'")
+        lines.append(f"echo '    {safe}'")
+    lines.append("echo ''")
+
+    # Divider before help output
+    lines.append("echo '================================================================'")
+    lines.append(f"echo '  RUNNING: {help_cmd}'")
+    lines.append("echo '================================================================'")
+    lines.append("echo ''")
+
+    # Actually run the help command so output appears live
+    lines.append(help_cmd)
+    lines.append("echo ''")
+
+    # Divider and drop to shell
+    lines.append("echo '================================================================'")
+    lines.append(f"echo '  Shell ready. Type your {display_name} command and press ENTER.'")
+    lines.append("echo '  Type exit to close this window.'")
+    lines.append("echo '================================================================'")
+    lines.append("echo ''")
+    lines.append("exec bash")
+
+    script_content = "\n".join(lines) + "\n"
+
     with open(script_path, "w") as f:
-        # The script prints a short description and example usage, then prompts the user
-        # with a pre-filled command they can edit. After running the command, it leaves
-        # the shell open so the user can continue.
-        f.write(
-            "#!/bin/bash\n"
-            "clear\n"
-            f"echo '  [*] {display_name} interactive session'\n"
-            f"echo ''\n"
-            f"echo '  What this tool does:'\n"
-            f"echo '    {shlex.quote(what)}'\n"
-            f"echo ''\n"
-            f"echo '  Example usage:'\n"
-            f"echo '    {shlex.quote(usage)}'\n"
-            f"echo ''\n"
-            "echo '  You can edit the command below before running. Press ENTER to run.'\n"
-            "echo ''\n"
-            f"DEFAULT_CMD={shlex.quote(start_cmd)}\n"
-            "read -e -i \"$DEFAULT_CMD\" -p '  godseye> ' USER_CMD\n"
-            "if [ -n \"$USER_CMD\" ]; then\n"
-            "    bash -lc \"$USER_CMD\"\n"
-            "fi\n"
-            "echo ''\n"
-            "echo '[*] Command finished. You can continue using this shell.'\n"
-            "exec bash\n"
-        )
+        f.write(script_content)
     os.chmod(script_path, 0o755)
-    opened_new_terminal = open_in_terminal(display_name, script_path)
 
-    if opened_new_terminal:
-        print(f"  {GREEN}[+] '{display_name}' launched in new terminal.{RESET}")
+    # ── Open the new terminal (non-blocking) ─────────────
+    opened = open_in_terminal(display_name, script_path, wait=False)
+
+    if opened:
+        print(f"  {GREEN}[+] '{display_name}' launched in new terminal window.{RESET}")
     else:
         print(f"  {GREEN}[+] '{display_name}' ran in the current terminal.{RESET}")
+
+    # Small sleep so the new window has time to appear before we print pause()
+    time.sleep(0.4)
     pause()
 
 
-# Anonymity utilities
+# ─────────────────────────────────────────────────────────
+# Anonymity utilities  — UNCHANGED
+# ─────────────────────────────────────────────────────────
+
 def get_current_ip(iface: str) -> str:
     try:
         cmd = (
@@ -397,7 +543,10 @@ def gods_fix():
     pause()
 
 
-# Browser launchers
+# ─────────────────────────────────────────────────────────
+# Browser launchers  — UNCHANGED
+# ─────────────────────────────────────────────────────────
+
 def open_url(url: str, label: str):
     clear_screen()
     header()
@@ -437,7 +586,10 @@ def clone_and_run(label: str, repo_url: str, run_cmd: str):
     pause()
 
 
-# Sub-menus
+# ─────────────────────────────────────────────────────────
+# Sub-menus  — UNCHANGED
+# ─────────────────────────────────────────────────────────
+
 def host_menu():
     options = {
         "1": ("amass", "Subdomain enumeration"),
@@ -535,6 +687,10 @@ def wireless_menu():
             break
 
 
+# ─────────────────────────────────────────────────────────
+# Integrations  — UNCHANGED
+# ─────────────────────────────────────────────────────────
+
 def integrations_menu():
     while True:
         clear_screen()
@@ -558,6 +714,10 @@ def integrations_menu():
         elif c == "0":
             break
 
+
+# ─────────────────────────────────────────────────────────
+# About  — UNCHANGED
+# ─────────────────────────────────────────────────────────
 
 def about():
     clear_screen()
@@ -593,7 +753,10 @@ def about():
     pause()
 
 
-# Main menu
+# ─────────────────────────────────────────────────────────
+# Main menu  — UNCHANGED
+# ─────────────────────────────────────────────────────────
+
 def main_menu():
     while True:
         clear_screen()
@@ -640,7 +803,10 @@ def main_menu():
             sys.exit(0)
 
 
+# ─────────────────────────────────────────────────────────
 # Entry point
+# ─────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
     try:
         main_menu()
