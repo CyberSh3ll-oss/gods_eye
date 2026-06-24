@@ -4,8 +4,8 @@
         ◈  ◈  ◈   G O D ' S   E Y E   ◈  ◈  ◈
   ════════════════════════════════════════════════════
             ⚡  O S I N T   S U I T E   ⚡
-                   Developed by: VAISHNAV
-                   contribution: Rishabh Gurnani
+                   Developed by: VAISHNAV RAJEEV
+                   contribution: RISHABH GURNANI
   ════════════════════════════════════════════════════
 ```
 
