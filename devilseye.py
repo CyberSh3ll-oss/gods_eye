@@ -44,6 +44,58 @@ TOOL_MAP = {
     "wifite": ("wifite", "wifite"),
 }
 
+# Short plain-language descriptions and example usage for each tool.
+TOOL_DESCRIPTIONS = {
+    "amass": {
+        "what": "Subdomain discovery and DNS mapping tool.",
+        "usage": "amass enum -d example.com"
+    },
+    "nmap": {
+        "what": "Network scanner for ports and services.",
+        "usage": "nmap -sC -sV example.com"
+    },
+    "theHarvester": {
+        "what": "Gather emails, hosts and OSINT from public sources.",
+        "usage": "theHarvester -d example.com -b all"
+    },
+    "dnsenum": {
+        "what": "Enumerate DNS records for a domain.",
+        "usage": "dnsenum example.com"
+    },
+    "dnsrecon": {
+        "what": "Perform DNS zone and record reconnaissance.",
+        "usage": "dnsrecon -d example.com"
+    },
+    "dirb": {
+        "what": "Directory brute-force using wordlists.",
+        "usage": "dirb https://example.com /usr/share/wordlists/dirb/common.txt"
+    },
+    "gobuster": {
+        "what": "Fast directory and DNS brute-forcer.",
+        "usage": "gobuster dir -u https://example.com -w /usr/share/wordlists/dirb/common.txt"
+    },
+    "ffuf": {
+        "what": "Fast web fuzzer for directories and parameters.",
+        "usage": "ffuf -u https://example.com/FUZZ -w /usr/share/wordlists/dirb/common.txt"
+    },
+    "wapiti": {
+        "what": "Web application vulnerability scanner.",
+        "usage": "wapiti -u https://example.com -f html -o /tmp/wapiti_report"
+    },
+    "wpscan": {
+        "what": "WordPress vulnerability scanner.",
+        "usage": "wpscan --url https://example.com --enumerate u"
+    },
+    "aircrack-ng": {
+        "what": "WPA/WEP handshake analysis and cracking suite.",
+        "usage": "aircrack-ng -w /path/to/wordlist capturefile.cap"
+    },
+    "wifite": {
+        "what": "Automated wireless auditing tool.",
+        "usage": "wifite"
+    },
+}
+
 TOOL_HELP_COMMANDS = {
     "amass": "amass -h",
     "nmap": "nmap -h",
@@ -126,6 +178,7 @@ def open_in_terminal(tool_display: str, script_path: str, wait: bool = False) ->
     title = f"GOD'S EYE | {tool_display.upper()}"
 
     if term is None:
+        # No graphical terminal available; run in current terminal
         subprocess.run(["bash", script_path])
         return False
 
@@ -148,6 +201,7 @@ def open_in_terminal(tool_display: str, script_path: str, wait: bool = False) ->
             proc.wait()
         return True
     except FileNotFoundError:
+        # Terminal disappeared between detection and launch; run in current shell
         subprocess.run(["bash", script_path])
         return False
 
@@ -198,14 +252,30 @@ def launch_tool(display_name: str):
         pause()
         return
 
+    # Prepare a helpful interactive script that prints a simple description and usage,
+    # then pre-fills a suggested command which the user can edit before running.
     start_cmd = TOOL_HELP_COMMANDS.get(display_name, f"{binary} -h")
+    desc = TOOL_DESCRIPTIONS.get(display_name, {})
+    what = desc.get("what", "Tool")
+    usage = desc.get("usage", start_cmd)
+
     script_path = f"/tmp/godseye_{display_name.replace(' ', '_').replace('/', '_')}.sh"
     with open(script_path, "w") as f:
+        # The script prints a short description and example usage, then prompts the user
+        # with a pre-filled command they can edit. After running the command, it leaves
+        # the shell open so the user can continue.
         f.write(
             "#!/bin/bash\n"
             "clear\n"
             f"echo '  [*] {display_name} interactive session'\n"
-            f"echo '  [*] Command is ready below. Press ENTER to run it, or edit it first.'\n"
+            f"echo ''\n"
+            f"echo '  What this tool does:'\n"
+            f"echo '    {shlex.quote(what)}'\n"
+            f"echo ''\n"
+            f"echo '  Example usage:'\n"
+            f"echo '    {shlex.quote(usage)}'\n"
+            f"echo ''\n"
+            "echo '  You can edit the command below before running. Press ENTER to run.'\n"
             "echo ''\n"
             f"DEFAULT_CMD={shlex.quote(start_cmd)}\n"
             "read -e -i \"$DEFAULT_CMD\" -p '  godseye> ' USER_CMD\n"
