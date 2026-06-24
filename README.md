@@ -5,6 +5,7 @@
   ════════════════════════════════════════════════════
             ⚡  O S I N T   S U I T E   ⚡
                    Developed by: VAISHNAV
+                   contribution: Rishabh Gurnani
   ════════════════════════════════════════════════════
 ```
 
