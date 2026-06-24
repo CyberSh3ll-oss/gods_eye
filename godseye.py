@@ -52,7 +52,7 @@ def header():
     print("        ◈  ◈  ◈   G O D ' S   E Y E   ◈  ◈  ◈")
     print(f"{CYAN}  " + "═" * 56)
     print(f"            ⚡  O S I N T   S U I T E   ⚡")
-    print(f"             Developed by: {RED}VAISHNAV{CYAN}")
+    print(f"               Developed by: {RED}VAISHNAV{CYAN}")
     print(f"  " + "═" * 56 + f"{RESET}\n")
 
 
