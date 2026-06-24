@@ -3,7 +3,7 @@
 ╔══════════════════════════════════════════════════════════╗
 ║         G O D ' S   E Y E  —  OSINT Suite                ║
 ║         Developed by: Vaishnav Rajeev                    ║
-║         Contributors: Rishabh Gurnani, Puneeth Sai       ║
+║         Contributors: Rishabh Gurnani                    ║
 ╚══════════════════════════════════════════════════════════╝
 """
 
@@ -442,14 +442,13 @@ def about():
   [!] PROJECT GOD'S EYE — CREDENTIALS REPORT
   {"─"*56}{RESET}
 
-  {BOLD}Lead Architect{RESET}
+  {BOLD} Architect{RESET}
   Vaishnav Rajeev — B.Tech Cyber Security
-  Specialisation: OSINT, digital forensics, network analysis
+  Specialisation: OSINT, digital forensics, network analysis,Scripting anad Automation
 
   {BOLD}Core Contributors{RESET}
   Rishabh Gurnani -B.Tech Cyber Security
-  Puneeth Sai - B.tech Cyber Security 
-
+  specialisation : Governance, risk & compliance(GRC), identity and multi factor authentication 
   {CYAN}{"─"*56}
   Mission
   {"─"*56}{RESET}
