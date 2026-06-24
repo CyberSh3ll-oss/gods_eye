@@ -278,4 +278,4 @@ gods_eye/
 
 MIT — see [LICENSE](LICENSE) for full terms.
 
-Copyright © 2025 Vaishnav Rajeev
+Copyright © 2026 Vaishnav Rajeev
