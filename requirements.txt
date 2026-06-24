@@ -1,0 +1,289 @@
+# ============================================================
+#   GOD'S EYE — OSINT Suite
+#   Developed by: Vaishnav Rajeev
+#   Contributors: Rishabh Gurnani, Puneeth Sai
+#   Technical Documentation: Suraj Varma
+# ============================================================
+#
+#   REQUIREMENTS FILE
+#   -----------------
+#   This file documents every dependency required to run
+#   God's Eye on Kali Linux / Parrot OS / Debian-based distros.
+#
+#   IMPORTANT: God's Eye uses ONLY Python standard library
+#   modules — no pip install is ever needed.
+#
+#   Run the integrated installer embedded in godseye.py:
+#     sudo python3 godseye.py --install
+#   Or install tools manually using the apt commands below.
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 1 — PYTHON RUNTIME
+# ============================================================
+#
+#   Minimum version : Python 3.6+
+#   (f-strings are used throughout; 3.6 is the hard floor)
+#   Recommended     : Python 3.10+
+#
+#   Verify your version:
+#     python3 --version
+#
+#   Standard library modules used (ALL built-in, zero pip):
+#     os          — screen clearing, file chmod, os.system calls
+#     sys         — clean exit handling (sys.exit)
+#     subprocess  — spawning terminals, running tools, ping
+#     threading   — non-blocking ping in gods_fix()
+#     socket      — internet connectivity check
+#     time        — DHCP lease wait loop in ip_changer()
+#
+#   No third-party pip packages are required.
+#   Do NOT run: pip install -r requirements.txt
+#   This file is documentation only for the Python section.
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 2 — CORE RUNTIME SYSTEM DEPENDENCIES
+# ============================================================
+#
+#   These packages are called DIRECTLY by godseye.py at runtime.
+#   Without them, core framework functions will fail.
+#
+#   Install all at once:
+#     sudo apt-get install -y python3 git iproute2 iputils-ping \
+#       network-manager macchanger xdg-utils xterm bash sudo
+#
+#   ┌─────────────────────┬──────────────────┬──────────────────────────────────────┐
+#   │ Apt Package         │ Binary / Service │ Used For                             │
+#   ├─────────────────────┼──────────────────┼──────────────────────────────────────┤
+#   │ python3             │ python3          │ Running godseye.py itself            │
+#   │ git                 │ git              │ clone_and_run() — Shannon AI clone   │
+#   │ iproute2            │ ip               │ ip link set / addr show (ip_changer) │
+#   │ iputils-ping        │ ping             │ Connectivity test in gods_fix()      │
+#   │ network-manager     │ NetworkManager   │ systemctl restart NetworkManager      │
+#   │ macchanger          │ macchanger       │ MAC randomise / restore (-r / -p)    │
+#   │ xdg-utils           │ xdg-open         │ Opening URLs in default browser      │
+#   │ xterm               │ xterm            │ Fallback terminal emulator           │
+#   │ bash                │ bash             │ Shell scripts written to /tmp        │
+#   │ sudo                │ sudo             │ Privileged commands throughout       │
+#   └─────────────────────┴──────────────────┴──────────────────────────────────────┘
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 3 — TERMINAL EMULATORS
+# ============================================================
+#
+#   God's Eye detects the best available terminal in this order:
+#     gnome-terminal → xfce4-terminal → konsole → xterm
+#
+#   At least ONE must be installed. xterm is the guaranteed
+#   fallback and should always be present.
+#
+#   Install preferred + fallback:
+#     sudo apt-get install -y xfce4-terminal xterm
+#
+#   ┌──────────────────────┬─────────────────────────────────────┐
+#   │ Apt Package          │ Notes                               │
+#   ├──────────────────────┼─────────────────────────────────────┤
+#   │ gnome-terminal       │ GNOME desktop default               │
+#   │ xfce4-terminal       │ XFCE / Kali default (recommended)   │
+#   │ konsole              │ KDE desktop default                 │
+#   │ xterm                │ Universal fallback — always install │
+#   └──────────────────────┴─────────────────────────────────────┘
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 4 — ACTIVE TOOL MODULES
+# ============================================================
+#
+#   These tools are wired into godseye.py's TOOL_MAP and appear
+#   in the interactive menus. Each is auto-detected and can be
+#   installed on-demand from within the framework.
+#
+#   Install all active tools at once:
+#     sudo apt-get install -y amass nmap theharvester \
+#       dnsenum dnsrecon dirb gobuster ffuf wapiti wpscan \
+#       aircrack-ng wifite
+#
+# ── 4a. Host OSINT ──────────────────────────────────────────
+#
+#   ┌──────────────────┬──────────────────┬──────────────────────────────────────┐
+#   │ Apt Package      │ Binary           │ Purpose                              │
+#   ├──────────────────┼──────────────────┼──────────────────────────────────────┤
+#   │ amass            │ amass            │ Subdomain enumeration & asset mapping│
+#   │ nmap             │ nmap             │ Port scanning & service detection    │
+#   │ theharvester     │ theHarvester     │ Email, host & subdomain harvesting   │
+#   └──────────────────┴──────────────────┴──────────────────────────────────────┘
+#
+# ── 4b. DNS Recon ───────────────────────────────────────────
+#
+#   ┌──────────────────┬──────────────────┬──────────────────────────────────────┐
+#   │ Apt Package      │ Binary           │ Purpose                              │
+#   ├──────────────────┼──────────────────┼──────────────────────────────────────┤
+#   │ dnsenum          │ dnsenum          │ DNS record enumeration & zone walks  │
+#   │ dnsrecon         │ dnsrecon         │ DNS reconnaissance & zone transfer   │
+#   └──────────────────┴──────────────────┴──────────────────────────────────────┘
+#
+# ── 4c. Web Scan ────────────────────────────────────────────
+#
+#   ┌──────────────────┬──────────────────┬──────────────────────────────────────┐
+#   │ Apt Package      │ Binary           │ Purpose                              │
+#   ├──────────────────┼──────────────────┼──────────────────────────────────────┤
+#   │ dirb             │ dirb             │ Directory brute-force (wordlist)     │
+#   │ gobuster         │ gobuster         │ Dir / DNS / vhost brute-force        │
+#   │ ffuf             │ ffuf             │ Fast web fuzzer                      │
+#   └──────────────────┴──────────────────┴──────────────────────────────────────┘
+#
+# ── 4d. Web Vulnerability ───────────────────────────────────
+#
+#   ┌──────────────────┬──────────────────┬──────────────────────────────────────┐
+#   │ Apt Package      │ Binary           │ Purpose                              │
+#   ├──────────────────┼──────────────────┼──────────────────────────────────────┤
+#   │ wapiti           │ wapiti3          │ Web app vulnerability scanner        │
+#   │ wpscan           │ wpscan           │ WordPress security scanner           │
+#   └──────────────────┴──────────────────┴──────────────────────────────────────┘
+#
+#   NOTE: wapiti's binary is wapiti3 on Kali — godseye.py handles
+#   this automatically via TOOL_MAP.
+#
+# ── 4e. Wireless Audit ──────────────────────────────────────
+#
+#   ┌──────────────────┬──────────────────┬──────────────────────────────────────┐
+#   │ Apt Package      │ Binary           │ Purpose                              │
+#   ├──────────────────┼──────────────────┼──────────────────────────────────────┤
+#   │ aircrack-ng      │ aircrack-ng      │ WPA/WEP handshake cracking & audit  │
+#   │ wifite           │ wifite           │ Automated wireless auditing          │
+#   └──────────────────┴──────────────────┴──────────────────────────────────────┘
+#
+#   NOTE: Wireless tools require a monitor-mode capable adapter.
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 5 — EXTENDED TOOLS (from setup.sh, future modules)
+# ============================================================
+#
+#   These tools were included in the original setup.sh and are
+#   available for future godseye.py menu extensions.
+#   They are NOT in the current TOOL_MAP but are fully
+#   compatible and can be added to any sub-menu.
+#
+#   Install all extended tools:
+#     sudo apt-get install -y dmitry spiderfoot unicornscan \
+#       legion dnsmap dirbuster recon-ng wfuzz burpsuite \
+#       davtest skipfish whatweb spooftooph
+#
+#   zenmap has no apt package on modern Kali — use nmapsi4:
+#     sudo apt-get install -y nmapsi4
+#
+#   ┌──────────────────┬────────────────────┬────────────────────────────────────┐
+#   │ Apt Package      │ Category           │ Purpose                            │
+#   ├──────────────────┼────────────────────┼────────────────────────────────────┤
+#   │ dmitry           │ Host OSINT         │ Deepmagic info gathering           │
+#   │ spiderfoot       │ Host OSINT         │ Automated OSINT framework          │
+#   │ unicornscan      │ Host OSINT         │ Async port & service scanner       │
+#   │ legion           │ Host OSINT         │ GUI network pentest framework      │
+#   │ nmapsi4          │ Host OSINT         │ Zenmap GUI replacement             │
+#   │ dnsmap           │ DNS Recon          │ DNS domain brute-force mapping     │
+#   │ dirbuster        │ Web Scan           │ Java-based directory brute-forcer  │
+#   │ recon-ng         │ Web Scan           │ Web reconnaissance framework       │
+#   │ wfuzz            │ Web Scan           │ Web content fuzzer                 │
+#   │ burpsuite        │ Web Vulnerability  │ Web app security testing suite     │
+#   │ davtest          │ Web Vulnerability  │ WebDAV server vulnerability tester │
+#   │ skipfish         │ Web Vulnerability  │ Active web app security recon      │
+#   │ whatweb          │ Web Vulnerability  │ Web tech fingerprinting            │
+#   │ spooftooph       │ Wireless           │ Bluetooth device spoofing          │
+#   └──────────────────┴────────────────────┴────────────────────────────────────┘
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 6 — INTEGRATIONS (internet required at runtime)
+# ============================================================
+#
+#   These are launched by godseye.py's Integrations menu.
+#   No apt package needed — opened via browser or git clone.
+#
+#   ┌────────────────────────┬───────────────────────────────────────────────────┐
+#   │ Integration            │ Details                                           │
+#   ├────────────────────────┼───────────────────────────────────────────────────┤
+#   │ Aegis Cyber Gateway    │ https://aegiscybercomms.netlify.app/              │
+#   │                        │ Opened via xdg-open (requires xdg-utils + browser)│
+#   ├────────────────────────┼───────────────────────────────────────────────────┤
+#   │ OSINT Framework        │ https://osintframework.com/                       │
+#   │                        │ Opened via xdg-open (requires xdg-utils + browser)│
+#   ├────────────────────────┼───────────────────────────────────────────────────┤
+#   │ Shannon AI (LLM)       │ https://github.com/KeygraphHQ/shannon.git         │
+#   │                        │ Cloned to /tmp via git, launched in new terminal  │
+#   │                        │ Requires: git (see Section 2)                     │
+#   └────────────────────────┴───────────────────────────────────────────────────┘
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 7 — REMOVED TOOLS
+# ============================================================
+#
+#   The following tool was present in the original requirements
+#   and setup.sh but has been intentionally removed from
+#   God's Eye and will not be reinstated:
+#
+#   zphisher — credential-harvesting phishing page generator.
+#   This tool falls outside the scope of OSINT and
+#   reconnaissance. Its primary function is to create fake
+#   login pages to steal credentials, which is illegal without
+#   explicit written authorisation and has no defensive
+#   research application within this framework.
+#
+# ============================================================
+
+
+# ============================================================
+# SECTION 8 — QUICK INSTALL REFERENCE
+# ============================================================
+#
+#   Copy-paste block for a full clean install on Kali Linux:
+#
+#   # 1. Update apt
+#   sudo apt-get update -y
+#
+#   # 2. Core runtime
+#   sudo apt-get install -y python3 git iproute2 iputils-ping \
+#     network-manager macchanger xdg-utils xterm bash sudo
+#
+#   # 3. Terminal emulators (at least one)
+#   sudo apt-get install -y xfce4-terminal xterm
+#
+#   # 4. Active tool modules (wired into godseye.py menus)
+#   sudo apt-get install -y amass nmap theharvester \
+#     dnsenum dnsrecon dirb gobuster ffuf wapiti wpscan \
+#     aircrack-ng wifite
+#
+#   # 5. Extended tools (optional, for future modules)
+#   sudo apt-get install -y dmitry spiderfoot unicornscan \
+#     legion nmapsi4 dnsmap dirbuster recon-ng wfuzz \
+#     burpsuite davtest skipfish whatweb spooftooph
+#
+#   # 6. Launch
+#   python3 godseye.py
+#
+# ============================================================
+#
+#   LEGAL NOTICE
+#   ------------
+#   All tools listed here must be used only on systems you own
+#   or have explicit written authorisation to test.
+#   Unauthorised scanning, probing, or exploitation is illegal.
+#
+# ============================================================
