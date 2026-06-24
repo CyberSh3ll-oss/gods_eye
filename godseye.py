@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════╗
-║         G O D ' S   E Y E  —  OSINT Suite               ║
+║         G O D ' S   E Y E  —  OSINT Suite                ║
 ║         Developed by: Vaishnav Rajeev                    ║
 ║         Contributors: Rishabh Gurnani, Puneeth Sai       ║
-║         Technical Documentation: Suraj Varma             ║
 ╚══════════════════════════════════════════════════════════╝
 """
 
@@ -448,11 +447,8 @@ def about():
   Specialisation: OSINT, digital forensics, network analysis
 
   {BOLD}Core Contributors{RESET}
-  Rishabh Gurnani
-  Puneeth Sai
-
-  {BOLD}Technical Documentation{RESET}
-  Suraj Varma — Senior Technical Author, Forthright Global
+  Rishabh Gurnani -B.Tech Cyber Security
+  Puneeth Sai - B.tech Cyber Security 
 
   {CYAN}{"─"*56}
   Mission
