@@ -115,9 +115,8 @@ godseye.py
 | Role | Name |
 |---|---|
 | Lead Architect | Vaishnav Rajeev (B.Tech Cyber Security) |
-| Core Contributor | Rishabh Gurnani |
-| Core Contributor | Puneeth Sai |
-| Technical Documentation | Suraj Varma |
+| Core Contributor | Rishabh Gurnani  (B.Tech Cyber Security) |
+| Core Contributor | Puneeth Sai  (B.Tech Cyber Security)  |
 
 Contact: vaishnav.cvv240888@cvv.ac.in
 
