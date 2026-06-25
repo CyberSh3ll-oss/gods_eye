@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║          OSINT FRAMEWORK  —  Python CLI Replication v1.0                   ║
-║          Source: https://osintframework.com  (lockfale/OSINT-Framework)    ║
+║                          OSINT FRAMEWORK                                     ║
+║                                                                              ║
 ║                                                                              ║
 ║  LEGEND                                                                      ║
-║   (T) Tool must be installed locally                                        ║
+║   (T) Tool must be installed locally                                         ║
 ║   (D) Google Dork                                                            ║
 ║   (R) Requires registration                                                  ║
 ║   (M) Manual URL editing required                                            ║
