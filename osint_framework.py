@@ -18,6 +18,7 @@ Usage:
     python3 osint_framework.py --list-categories
 """
 
+
 import os
 import sys
 import json
