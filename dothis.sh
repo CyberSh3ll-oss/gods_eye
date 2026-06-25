@@ -162,4 +162,4 @@ echo ""
 # SECTION 8 — FINALISE
 echo -e "${CYAN}${BOLD}  ── FINALISING ──────────────────────────────────────${RESET}"
 
-SCRIPT_DIR="$(cd
+SCRIPT_DIR="$(cd)"
