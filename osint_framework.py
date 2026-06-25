@@ -1047,16 +1047,16 @@ def clear():
 
 def banner():
     lines = [
-        BOLD(CYAN("╔══════════════════════════════════════════════════════════════╗")),
-        BOLD(CYAN("║") + BOLD("        OSINT FRAMEWORK  —  Python CLI Replication             ") + BOLD(CYAN("║"))),
-        BOLD(CYAN("║") + DIM("        Source: https://osintframework.com                     ") + BOLD(CYAN("║"))),
-        BOLD(CYAN("╚══════════════════════════════════════════════════════════════╝")),
+        BOLD(CYAN("╔══════════════════════════════════════════════════════════════════════════════╗")),
+        BOLD(CYAN("║                          O S I N T   F R A M E W O R K                       ║")),
+        BOLD(CYAN("╚══════════════════════════════════════════════════════════════════════════════╝")),
         "",
         f"  {RED('[T]')} Local Install    {YELLOW('[D]')} Google Dork    "
         f"{CYAN('[R]')} Registration    {MAGENTA('[M]')} Edit URL",
         "",
     ]
     print("\n".join(lines))
+
 
 
 def print_tool(tool: dict, indent: int = 4) -> None:
