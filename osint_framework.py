@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          OSINT FRAMEWORK                                     ║
-║                                                                              ║
+║                          O S I N T   F R A M E W O R K                       ║
 ║                                                                              ║
 ║  LEGEND                                                                      ║
 ║   (T) Tool must be installed locally                                         ║
