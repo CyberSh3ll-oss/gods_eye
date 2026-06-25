@@ -2,8 +2,7 @@
 # ============================================================
 #   GOD'S EYE — OSINT Suite
 #   Developed by: Vaishnav Rajeev
-#   Contributors: Rishabh Gurnani, Puneeth Sai
-#   Technical Documentation: Suraj Varma
+#   Contributors: Rishabh Gurnani
 # ============================================================
 #   Auto-installer for all system tools and runtime deps.
 #
