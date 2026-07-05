@@ -3,8 +3,8 @@
 ```
         *  *  *   G O D ' S   E Y E   *  *  *
   ========================================================
-              OSINT SUITE
-         Developed by: VAISHNAV
+                     OSINT SUITE
+       c        Developed by: VAISHNAV
   ========================================================
 ```
 
