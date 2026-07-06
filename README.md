@@ -3,7 +3,7 @@
         * * * G O D ' S   E Y E   * * *
   ========================================================
                      OSINT SUITE
-       c        Developed by: VAISHNAV
+               Developed by: VAISHNAV
   ========================================================
 
 A unified command-line framework that consolidates industry-standard reconnaissance, exploitation, lateral movement, hardware hacking, and network anonymity tools into a single interactive menu — built for ethical hackers, security researchers, and defenders.
