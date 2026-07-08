@@ -1114,8 +1114,8 @@ def about():
 
   {BOLD}Architect{RESET}
   Vaishnav Rajeev - B.Tech Cyber Security
-  Specialisation: OSINT, digital forensics, network analysis,
-  scripting and automation
+  Specialisation: OSINT, digital forensics, network security,Cyber espionage,Reconnaisance and Enumeration, Social Engineering,IoT and Embedded device security 
+  scripting and automation,
 
   {BOLD}Core Contributors{RESET}
   Rishabh Gurnani - B.Tech Cyber Security
