@@ -449,8 +449,8 @@ def header():
     print(f"{RED}{BOLD}")
     print("        *  *  *   G O D ' S   E Y E   *  *  *")
     print(f"{CYAN}  " + "=" * 56)
-    print("            OSINT SUITE")
-    print(f"               Developed by: {RED}VAISHNAV{CYAN}")
+    print("                     OSINT SUITE")
+    print(f"               Developed by: {RED}VAISHNAV RAJEEV{CYAN}")
     print(f"  " + "=" * 56 + f"{RESET}\n")
 
 
