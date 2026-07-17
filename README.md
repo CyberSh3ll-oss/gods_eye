@@ -1,67 +1,199 @@
-# God's Eye — OSINT & Exploitation Suite
+<div align="center">
 
-        * * * G O D ' S   E Y E   * * *
-  ========================================================
-                     OSINT SUITE
-               Developed by: VAISHNAV
-  ========================================================
+# 👁️ God's Eye
 
-A unified command-line framework that consolidates industry-standard reconnaissance, exploitation, lateral movement, hardware hacking, and network anonymity tools into a single interactive menu — built for ethical hackers, security researchers, and defenders.
+### *An Advanced OSINT & Cybersecurity Reconnaissance Framework*
 
-## Table of Contents
+<p align="center">
+A powerful Python-based toolkit that unifies OSINT, reconnaissance, enumeration, and security assessment into a single interactive command-line interface.
+</p>
 
-- [Features](#features)
-- [Menu Structure](#menu-structure)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Tool Reference](#tool-reference)
-- [Integrations](#integrations)
-- [Repository Structure](#repository-structure)
-- [Authors](#authors)
-- [Legal Notice](#legal-notice)
-- [Licence](#licence)
+<p align="center">
+<img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white">
+<img src="https://img.shields.io/badge/Platform-Linux-red?style=for-the-badge&logo=linux&logoColor=white">
+<img src="https://img.shields.io/badge/OSINT-Framework-success?style=for-the-badge">
+<img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge">
+</p>
+
+</div>
 
 ---
 
-## Features
+# 📖 Overview
 
-* **Single interactive menu** — no memorising commands.
-* **Auto-installation** — detects whether each tool is installed and offers to install it via `apt` on the spot.
-* **Built-in knowledge base** — selecting a tool clears the screen and shows:
-  * Plain-English explanation of what the tool does.
-  * Real example commands ready to copy.
-  * Live help output from the tool itself.
-* **Full Attack Lifecycle Support** — expanded from pure OSINT to include exploitation, post-exploitation, phishing, and IoT hardware hacking.
-* **Network anonymity utilities** — MAC changer, IP changer, network rollback (GOD'S FIX).
-* **Audio Surveillance** — custom IoT Audio Hijack Proof of Concept (PoC) for ADB-based microphone capture.
-* **Integrated integrations** — browser launcher for Aegis Cyber Gateway, OSINT Framework, and Shannon AI (LLM).
-* **Robust session handling** — clean exit on `Ctrl+C` at any point.
+God's Eye is a Python-powered cybersecurity toolkit that combines multiple reconnaissance, OSINT, enumeration, and penetration-testing utilities into one easy-to-use interactive framework.
+
+Instead of switching between numerous security tools manually, God's Eye provides a centralized interface for information gathering and security assessments, making reconnaissance workflows faster and more organized.
 
 ---
 
-## Menu Structure
+# ✨ Features
+
+- 🔍 Open Source Intelligence (OSINT)
+- 🌐 Network Reconnaissance
+- 📡 Subdomain Enumeration
+- 🛰️ DNS & WHOIS Lookup
+- 🔎 Port & Service Scanning
+- 🛡️ Vulnerability Assessment
+- 📂 Automated Information Gathering
+- ⚙️ Interactive CLI Interface
+- 📊 Organized Results
+- 🐍 Python-Based Framework
+
+---
+
+# 🏗️ Architecture
+
+```mermaid
+flowchart TD
+
+A[User]
+A --> B[God's Eye CLI]
+
+B --> C[OSINT]
+B --> D[Recon]
+B --> E[Scanning]
+B --> F[Enumeration]
+
+C --> G[Reports]
+D --> G
+E --> G
+F --> G
+```
+
+---
+
+# 📂 Project Structure
 
 ```text
-  [ Reconnaissance ]
-  [1] Host OSINT        [2] DNS Recon
-  [3] Web Scan          [4] Web Vuln
-  [5] Wireless Audit
+gods_eye/
+│
+├── assets/
+├── docs/
+├── modules/
+├── requirements.txt
+├── install.sh
+├── godseye.py
+└── README.md
+```
 
-  [ Exploitation / Post-Exploit ]
-  [6] Exploitation      [7] Post-Exploit & Pivot
-  [8] Phishing / Social Eng
+---
 
-  [ IoT / Audio ]
-  [9] IoT & Hardware    [10] Audio Surveillance
+# 🛠️ Integrated Tools
 
-  [ Anonymity ]
-  [11] MAC Changer      [12] IP Changer
-  [13] GOD'S FIX
+| Tool | Purpose |
+|------|----------|
+| Nmap | Network Discovery & Port Scanning |
+| Amass | Subdomain Enumeration |
+| theHarvester | Email & Domain Intelligence |
+| SQLMap | SQL Injection Testing |
+| Hydra | Password Auditing |
+| Metasploit | Exploitation Framework |
 
-  [ Integrations ]
-  [14] External Tools & Integrations
+---
 
-  [ Info ]
-  [15] About / Authors
-  [0]  Exit
+# ⚙️ Installation
+
+```bash
+git clone https://github.com/CyberSh3ll-oss/gods_eye.git
+
+cd gods_eye
+
+pip install -r requirements.txt
+
+python godseye.py
+```
+
+---
+
+# 🚀 Usage
+
+Launch the framework:
+
+```bash
+python godseye.py
+```
+
+Choose a module from the interactive menu and follow the on-screen instructions.
+
+---
+
+# 📋 Requirements
+
+- Python 3.10+
+- Linux (Recommended: Kali Linux)
+- Internet Connection
+- Git
+
+---
+
+# 🎯 Why God's Eye?
+
+✅ Centralized cybersecurity toolkit
+
+✅ Interactive command-line interface
+
+✅ Multiple reconnaissance modules
+
+✅ Beginner-friendly workflow
+
+✅ Modular & extensible design
+
+✅ Designed for ethical security research
+
+---
+
+# ⚠️ Disclaimer
+
+This project is intended **strictly for educational purposes and authorized security testing**.
+
+Do **NOT** use God's Eye against systems, networks, or applications without explicit permission.
+
+The author assumes **no responsibility** for misuse or damage caused by this software.
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository.
+2. Create a new branch.
+3. Commit your changes.
+4. Submit a Pull Request.
+
+Bug reports, feature requests, and improvements are always appreciated.
+
+---
+
+# ⭐ Support
+
+If you found this project useful:
+
+⭐ Star the repository
+
+🍴 Fork the project
+
+🛠️ Contribute improvements
+
+📢 Share it with the cybersecurity community
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+<div align="center">
+
+## 👁️ God's Eye
+
+**Empowering Ethical Hackers • Security Researchers • OSINT Enthusiasts**
+
+*"See more. Know more. Secure better."*
+
+⭐ **If you like this project, don't forget to leave a Star!**
+
+</div>
